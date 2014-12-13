@@ -78,6 +78,7 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 			e.preventDefault ();
 
 			// display changes
+			router.navigate ($('#version-check').val ());
 			process ();
 
 			// cancel
