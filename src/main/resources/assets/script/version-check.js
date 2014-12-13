@@ -72,10 +72,12 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			if (!children && key == startHash) return -1;
 
 			// add to commit list
-			commits.push (key);
+			if (key != startHash) {
+				commits.push (key);
 
-			// add commit
-			commitsOut.push (cache.get ('commits')[key]);
+				// add commit
+				commitsOut.push (cache.get ('commits')[key]);
+			}
 
 			// skip if no children are defined
 			if (!children) continue;
