@@ -79,7 +79,7 @@ define (['model/commits-craftbukkit', 'model/commits-spigot'], function (Commits
 			if (commitID == craftbukkitHash) return true;
 
 			// add commit to list
-			if (result.commits.craftbukkit.length < MAX_COMMITS) result.commits.craftbukkit.push (element);
+			if (result.commits.craftbukkit.length < MAX_COMMITS) result.commits.craftbukkit.push (element.attributes);
 
 			// sanitize end result
 			if (index == (commitsCraftBukkit.length - 1)) result = {
@@ -105,7 +105,7 @@ define (['model/commits-craftbukkit', 'model/commits-spigot'], function (Commits
 			if (commitID == spigotHash) return true;
 
 			// add commit to list
-			if (result.commits.spigot.length < MAX_COMMITS) result.commits.spigot.push (element);
+			if (result.commits.spigot.length < MAX_COMMITS) result.commits.spigot.push (element.attributes);
 
 			// sanitize end result
 			if (index == (commitsSpigot.length - 1)) result = {
