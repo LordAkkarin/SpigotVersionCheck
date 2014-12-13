@@ -91,7 +91,10 @@
 			<section id="footer" class="container" layout:fragment="footer">
 				<div class="row">
 					<div class="col-md-6">
-						<p class="application-copyright" th:utext="#{application.copyright}"></p>
+						<p class="application-copyright">
+							<span th:utext="#{application.copyright}"></span><br />
+							<span>Source @ <a href="https://github.com/LordAkkarin/SpigotVersionCheck">GitHub</a></span>
+						</p>
 					</div>
 					<div class="col-md-6 text-right">
 						<p class="application-version" th:text="${app.version}"></p>
