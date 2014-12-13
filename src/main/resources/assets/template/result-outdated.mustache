@@ -1,0 +1,50 @@
+<!--
+  ~ Copyright 2014 Johannes Donath <johannesd@torchmind.com>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ 	http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<div id="result-outdated">
+	<hgroup class="headline-group text-center">
+		<h2>{{translation "index.result.outdated.headline"}}</h2>
+		<h3>{{translation "index.result.outdated.intro"}}&nbsp;{{#versions.craftbukkit}}{{versions.craftbukkitCount}}&nbsp;{{translation "index.result.outdated.craftbukkit"}}{{/versions.craftbukkit}}{{#condition versions.craftbukkit "&&" versions.spigot}}&nbsp;{{translation "index.result.outdated.and"}}&nbsp;{{/condition}}{{#versions.spigot}}{{versions.spigotCount}}&nbsp;{{translation "index.result.outdated.spigot"}}{{/versions.spigot}}&nbsp;{{translation "index.result.outdated.outro"}}</h3>
+	</hgroup>
+	<div id="result-outdated-commits" class="row">
+		<div class="col-md-6">
+			<h3 class="result-outdated-commits-headline">{{translation "index.result.outdated.revisions.craftbukkit"}}</h3>
+
+			{{#each commits.crafbukkit}}
+				{{> commit}}
+			{{/each}}
+			{{#unless commits.craftbukkit.length}}
+				<p class="alert alert-info">{{translation "index.result.outdated.craftbukkit"}} {{translation "index.result.outdated.latest"}}</p>
+			{{/unless}}
+
+			{{#condition version.craftbukkitCount ">" commits.craftbukkit.length}}
+				<small class="text-muted">{{translation "index.result.outdated.truncated"}}</small>
+			{{/condition}}
+		</div>
+		<div class="col-md-6">
+			<h3 class="result-outdated-commits-headline">{{translation "index.result.outdated.revisions.spigot"}}</h3>
+
+			{{#each commits.spigot}}
+				{{> commit}}
+			{{/each}}
+			{{#unless commits.spigot.length}}
+				<p class="alert alert-info">{{translation "index.result.outdated.spigot"}} {{translation "index.result.outdated.latest"}}</p>
+			{{/unless}}
+
+			{{#condition version.spigotCount ">" commits.spigot.length}}
+				<small class="text-muted">{{translation "index.result.outdated.truncated"}}</small>
+			{{/condition}}
+		</div>
+	</div>
+</div>
