@@ -76,5 +76,8 @@ public class SpigotVersionCache extends AbstractVersionCache {
 			this.commits = response.getCommitMap ();
 			this.parents = response.getParentMap ();
 		}
+
+		// delete cache
+		this.deleteResponseCache ();
 	}
 }

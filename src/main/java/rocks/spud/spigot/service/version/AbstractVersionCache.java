@@ -62,4 +62,11 @@ public abstract class AbstractVersionCache implements IVersionCache {
 		// return
 		return this.responseCache;
 	}
+
+	/**
+	 * Deletes the response cache.
+	 */
+	protected void deleteResponseCache () {
+		this.responseCache = null;
+	}
 }
