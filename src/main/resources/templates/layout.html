@@ -56,9 +56,15 @@
 		//]]>
 		</script>
 		<script type="text/javascript" th:src="@{/assets/script/library/require.js}" data-main="application"></script>
-		<script type="text/javascript">//<![CDATA[
-			define ('translation', [ ], function () { return { }; });
-		//]]></script>
+		<script type="text/javascript" th:inline="javascript">
+		//<![CDATA[
+			define ('translation', [ ], function () {
+				return {
+					"commit.by": /*[[#{commit.by}]]*/ ''
+				};
+			});
+		//]]>
+		</script>
 	</head>
 	<body>
 		<header id="header-container" layout:fragment="headerContainer">
