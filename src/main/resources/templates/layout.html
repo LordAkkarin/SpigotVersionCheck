@@ -33,6 +33,14 @@
 		//<![CDATA[
 			require.config ({
 				baseUrl:		/*[[@{/assets/script/}]]*/ '',
+				map:			{
+					'*':			{
+						handlebars:		'handlebars-wrapper'
+					},
+					'handlebars-wrapper':	{
+						handlebars:		'handlebars'
+					}
+				},
 				paths:			{
 					backbone:		'library/backbone',
 					handlebars:		'library/handlebars',
