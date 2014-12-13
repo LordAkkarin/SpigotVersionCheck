@@ -28,7 +28,7 @@
 				<p class="alert alert-info">{{translation "index.result.outdated.craftbukkit"}} {{translation "index.result.outdated.latest"}}</p>
 			{{/unless}}
 
-			{{#condition version.craftbukkitCount ">" commits.craftbukkit.length}}
+			{{#condition versions.craftbukkitCount ">" commits.craftbukkit.length}}
 				<small class="text-muted">{{translation "index.result.outdated.truncated"}}</small>
 			{{/condition}}
 		</div>
@@ -42,7 +42,7 @@
 				<p class="alert alert-info">{{translation "index.result.outdated.spigot"}} {{translation "index.result.outdated.latest"}}</p>
 			{{/unless}}
 
-			{{#condition version.spigotCount ">" commits.spigot.length}}
+			{{#condition versions.spigotCount ">" commits.spigot.length}}
 				<small class="text-muted">{{translation "index.result.outdated.truncated"}}</small>
 			{{/condition}}
 		</div>
