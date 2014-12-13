@@ -18,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import rocks.spud.spigot.data.ICommit;
 import rocks.spud.spigot.service.version.CraftBukkitVersionCache;
 import rocks.spud.spigot.service.version.SpigotVersionCache;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author Johannes Donath <johannesd@torchmind.com>
@@ -49,8 +48,8 @@ public class CommitAPI {
 	 * @return The cache.
 	 */
 	@RequestMapping (value = "/craftbukkit", method = RequestMethod.GET)
-	public List<? extends ICommit> craftBukkit () {
-		return this.craftBukkitVersionCache.getCommits ();
+	public Map<String, Object> craftBukkit () {
+		return this.craftBukkitVersionCache.getResponseCache ();
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class CommitAPI {
 	 * @return The cache.
 	 */
 	@RequestMapping (value = "/spigot", method = RequestMethod.GET)
-	public List<? extends ICommit> spigot () {
-		return this.spigotVersionCache.getCommits ();
+	public Map<String, Object> spigot () {
+		return this.spigotVersionCache.getResponseCache ();
 	}
 }

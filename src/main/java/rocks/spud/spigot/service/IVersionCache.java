@@ -17,6 +17,7 @@ package rocks.spud.spigot.service;
 import rocks.spud.spigot.data.ICommit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a version cache.
@@ -26,8 +27,20 @@ import java.util.List;
 public interface IVersionCache {
 
 	/**
-	 * Returns a list of commits.
-	 * @return The commit list.
+	 * Returns a map of commits.
+	 * @return The commit map.
 	 */
-	public List<? extends ICommit> getCommits ();
+	public Map<String, ? extends ICommit> getCommits ();
+
+	/**
+	 * Returns the parent map.
+	 * @return The parent map.
+	 */
+	public Map<String, List<String>> getParents ();
+
+	/**
+	 * Returns the response cache.
+	 * @return The cache.
+	 */
+	public Map<String, Object> getResponseCache ();
 }

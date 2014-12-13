@@ -17,10 +17,10 @@ package rocks.spud.spigot.service.version;
 import org.springframework.stereotype.Component;
 import rocks.spud.spigot.data.ICommit;
 import rocks.spud.spigot.data.stash.StashCommitResponse;
-import rocks.spud.spigot.service.IVersionCache;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a version cache for Spigot commits.
@@ -28,7 +28,7 @@ import java.util.List;
  * @copyright Copyright (C) 2014 Torchmind <http://www.torchmind.com>
  */
 @Component ("spigotVersionCache")
-public class SpigotVersionCache implements IVersionCache {
+public class SpigotVersionCache extends AbstractVersionCache {
 
 	/**
 	 * Defines the Spigot release commit to look for.
@@ -38,15 +38,30 @@ public class SpigotVersionCache implements IVersionCache {
 	/**
 	 * Stores the commit list.
 	 */
-	private List<? extends ICommit> commits = new ArrayList<> ();
+	private Map<String, ? extends ICommit> commits = new HashMap<> ();
+
+	/**
+	 * Stores the parent map.
+	 */
+	private Map<String, List<String>> parents = new HashMap<> ();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<? extends ICommit> getCommits () {
+	public Map<String, ? extends ICommit> getCommits () {
 		synchronized (this) {
 			return this.commits;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<String, List<String>> getParents () {
+		synchronized (this) {
+			return this.parents;
 		}
 	}
 
@@ -54,10 +69,12 @@ public class SpigotVersionCache implements IVersionCache {
 	 * Polls an update.
 	 */
 	public void poll () {
-		List<? extends ICommit> commits = StashCommitResponse.getStashCommitResponse ("SPIGOT", "spigot", RELEASE_COMMIT).getCommits ();
+		StashCommitResponse response = StashCommitResponse.getStashCommitResponse ("SPIGOT", "spigot", RELEASE_COMMIT);
 
+		// synchronize & store values
 		synchronized (this) {
-			this.commits = commits;
+			this.commits = response.getCommitMap ();
+			this.parents = response.getParentMap ();
 		}
 	}
 }
