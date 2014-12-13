@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define (['model/commits-craftbukkit', 'model/commits-spigot'], function (CommitsCraftBukkit, CommitsSpigot) {
+define (['jquery', 'model/cache-craftbukkit', 'model/cache-spigot'], function ($, CacheCraftBukkit, CacheSpigot) {
 	"use strict";
 
 	// constants
@@ -20,12 +20,67 @@ define (['model/commits-craftbukkit', 'model/commits-spigot'], function (Commits
 	var OLD_VERSION_PATTERN = /(\s|^)git-Spigot-(\"([A-F0-9]{7})\"|([A-F0-9]{7}))(\s|$)/i;
 	var MAX_COMMITS = 20;
 
-	// fetch commits
-	var commitsCraftBukkit = new CommitsCraftBukkit ();
-	commitsCraftBukkit.fetch ();
+	// fetch caches
+	var cacheCraftBukkit = new CacheCraftBukkit ();
+	var cacheSpigot = new CacheSpigot ();
 
-	var commitsSpigot = new CommitsSpigot ();
-	commitsSpigot.fetch ();
+	cacheCraftBukkit.fetch ();
+	cacheSpigot.fetch ();
+
+	/**
+	 * Walks the commit tree.
+	 * @param startHash The start hash.
+	 * @param cache The cache to read from.
+	 * @param commitsOut The output array.
+	 */
+	function walkTree (startHash, cache, commitsOut) {
+		var commits = [];
+		var searchQueue = [ startHash ];
+
+		// verify start hash
+		if (!cache.get ('commits')[startHash]) return -2;
+
+		// search in parent map
+		do {
+			var key = searchQueue[0];
+
+			// remove
+			searchQueue.splice (0, 1);
+
+			// skip iteration if already processed
+			if (commits.indexOf (key) > -1) continue;
+
+			// add to commit list
+			commits.push (key);
+
+			// add commit
+			commitsOut.push (cache.get ('commits')[key]);
+
+			// get children
+			var children = cache.get ('parents')[key];
+
+			// skip if no children are defined
+			if (!children) continue;
+
+			// append children to queue
+			$(children).each (function (index, element) {
+				// check whether commit is already queued
+				if (searchQueue.indexOf (element) > -1 || commits.indexOf (element) > 0) return true;
+
+				// add to queue
+				searchQueue.push (element);
+			});
+		} while (searchQueue.length > 0);
+
+		// reverse array
+		commitsOut.reverse ();
+
+		// remove elements
+		commitsOut.splice (MAX_COMMITS, (commitsOut.length - MAX_COMMITS));
+
+		// return length
+		return (commits.length - 1);
+	}
 
 	/**
 	 * Checks a version.
@@ -67,58 +122,20 @@ define (['model/commits-craftbukkit', 'model/commits-spigot'], function (Commits
 			}
 		};
 
-		// search CraftBukkit version
-		commitsCraftBukkit.find (function (element, index) {
-			// increase counter
-			result.versions.craftbukkitCount++;
+		// walk commit trees
+		result.versions.craftbukkitCount = walkTree (craftbukkitHash, cacheCraftBukkit, result.commits.craftbukkit);
+		result.versions.spigotCount = walkTree (spigotHash, cacheSpigot, result.commits.spigot);
 
-			// extract commit ID
-			var commitID = element.get ('identifier').substr (0, 7).toLowerCase();
+		// handle invalid versions
+		if (result.versions.craftbukkitCount == -2 || result.versions.spigotCount == -2) return {
+			error:				"unknown"
+		};
 
-			// check
-			if (commitID == craftbukkitHash) return true;
+		// update booleans
+		result.versions.craftbukkit = (result.versions.craftbukkitCount > 0);
+		result.versions.spigot = (result.versions.spigotCount > 0);
 
-			// add commit to list
-			if (result.commits.craftbukkit.length < MAX_COMMITS) result.commits.craftbukkit.push (element.attributes);
-
-			// sanitize end result
-			if (index == (commitsCraftBukkit.length - 1)) result = {
-				error:		'unknown'
-			};
-
-			// continue
-			return false;
-		});
-
-		// check for errors
-		if (!!result.error) return result;
-
-		// search Spigot version
-		commitsSpigot.find (function (element, index) {
-			// increase counter
-			result.versions.spigotCount++;
-
-			// extract commit ID
-			var commitID = element.get ('identifier').substr (0, 7).toLowerCase();
-
-			// check
-			if (commitID == spigotHash) return true;
-
-			// add commit to list
-			if (result.commits.spigot.length < MAX_COMMITS) result.commits.spigot.push (element.attributes);
-
-			// sanitize end result
-			if (index == (commitsSpigot.length - 1)) result = {
-				error:		'unknown'
-			};
-
-			// continue
-			return false;
-		});
-
-		// set booleans
-		if (!result.error && result.versions.spigotCount > 0) result.versions.spigot = true;
-		if (!result.error && result.versions.craftbukkitCount > 0) result.versions.craftbukkit = true;
+		console.log (result);
 
 		// return result
 		return result;
