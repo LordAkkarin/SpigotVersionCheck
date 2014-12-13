@@ -15,8 +15,6 @@
 define (['handlebars', 'translation'], function (Handlebars, translation) {
 	"use strict";
 
-	console.log ('Handlebars!');
-
 	// register condition handler
 	Handlebars.registerHelper('condition', function (v1, operator, v2, options) {
 		var value = false;
