@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -60,43 +61,22 @@ public class ApplicationDetail {
 	 * Constructs a new ApplicationDetail instance.
 	 */
 	public ApplicationDetail () {
-		// get package
-		Package p = ApplicationDetail.class.getPackage ();
+		// get properties
+		Properties properties = new Properties ();
+		properties.setProperty ("application.title", "Development Server");
+		properties.setProperty ("application.version", "(Development Snapshot)");
+		properties.setProperty ("application.vendor", "Unknown Vendor");
 
-		// declare default values
-		String title = "Development Server";
-		String version = "(Development Snapshot)";
-		String vendor = "Unknown Vendor";
-
-		// read manifest values
-		if (p != null) {
-			title = (p.getImplementationTitle () != null ? p.getImplementationTitle () : title);
-			version = (p.getImplementationVersion () != null ? p.getImplementationVersion () : version);
-			vendor = (p.getImplementationVendor () != null ? p.getImplementationVendor () : vendor);
-		}
-
-		// read custom values
+		// load
 		try {
-			// open manifest
-			Manifest manifest = new Manifest (this.getClass ().getResourceAsStream ("/META-INF/MANIFEST.MF"));
-
-			// get attributes
-			Attributes attributes = manifest.getMainAttributes ();
-
-			// get value
-			String buildNumber = attributes.getValue ("Implementation-Build");
-
-			if (buildNumber == null)
-				getLogger ().warn ("No build number found in application manifest.");
-			else
-				version += "-" + buildNumber;
+			properties.load (ApplicationDetail.class.getResourceAsStream ("/metadata.properties"));
 		} catch (IOException ex) {
-			getLogger ().warn ("Could not load manifest: " + ex.getMessage ());
+			getLogger ().warn ("Could not load application metadata: " + ex.getMessage ());
 		}
 
 		// store version
-		this.title = title;
-		this.version = version;
-		this.vendor = vendor;
+		this.title = properties.getProperty ("application.title");
+		this.version = properties.getProperty ("application.version");
+		this.vendor = properties.getProperty ("application.vendor");
 	}
 }

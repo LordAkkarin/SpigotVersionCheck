@@ -223,6 +223,17 @@
 					<include>**</include>
 				</includes>
 			</resource>
+
+			<!-- Metadata -->
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+
+				<includes>
+					<include>metadata.properties</include>
+				</includes>
+			</resource>
 		</resources>
 
 		<!-- Plugins -->
