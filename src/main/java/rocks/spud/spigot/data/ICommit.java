@@ -52,4 +52,10 @@ public interface ICommit {
 	 * @return The message.
 	 */
 	public String getMessage ();
+
+	/**
+	 * Returns a list of parent commits.
+	 * @return The commit identifiers.
+	 */
+	public List<String> getParentCommits ();
 }

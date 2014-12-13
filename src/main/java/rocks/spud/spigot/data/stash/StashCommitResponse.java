@@ -16,10 +16,15 @@ package rocks.spud.spigot.data.stash;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import lombok.NonNull;
+import org.apache.log4j.LogManager;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a representation for Stash commit API responses.
@@ -36,23 +41,21 @@ public class StashCommitResponse {
 	public static final int DEFAULT_LIMIT = 8192;
 
 	/**
-	 * Stores the commit response.
+	 * Stores the commit map.
 	 */
-	@JsonProperty (value = "values", required = true)
-	private List<StashCommit> values;
+	@Getter
+	private Map<String, StashCommit> commitMap;
+
+	/**
+	 * Stores the parent map.
+	 */
+	@Getter
+	private Map<String, List<String>> parentMap;
 
 	/**
 	 * Internal Constructor
 	 */
 	private StashCommitResponse () { }
-
-	/**
-	 * Returns a list of commits within this response.
-	 * @return The commit list.
-	 */
-	public List<StashCommit> getCommits () {
-		return this.values;
-	}
 
 	/**
 	 * Requests a commit set from Stash.
@@ -79,5 +82,34 @@ public class StashCommitResponse {
 	 */
 	public static StashCommitResponse getStashCommitResponse (String organization, String repository, String since) {
 		return getStashCommitResponse (organization, repository, DEFAULT_LIMIT, since);
+	}
+
+	/**
+	 * Processes the value list.
+	 * @param commitList The commit list.
+	 */
+	@JsonProperty (value = "values", required = true)
+	private void processValues (@NonNull List<StashCommit> commitList) {
+		this.commitMap = new HashMap<> ();
+		this.parentMap = new HashMap<> ();
+
+		// collect list of commits
+		for (StashCommit commit : commitList) {
+			this.commitMap.put (commit.getIdentifier ().substring (0, 7).toLowerCase (), commit);
+		}
+
+		// build parent index
+		for (Map.Entry<String, StashCommit> commitEntry : this.commitMap.entrySet ()) {
+			for (String parent : commitEntry.getValue ().getParentCommits ()) {
+				// get parent name
+				parent = parent.substring (0, 7);
+
+				// create new list
+				if (!this.parentMap.containsKey (parent)) this.parentMap.put (parent, new ArrayList<String> ());
+
+				// add to list
+				this.parentMap.get (parent).add (commitEntry.getValue ().getIdentifier ().substring (0, 7));
+			}
+		}
 	}
 }

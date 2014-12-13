@@ -73,6 +73,11 @@ public class StashCommit implements ICommit {
 	private String message;
 
 	/**
+	 * Stores a list of parent commits.
+	 */
+	private List<String> parent;
+
+	/**
 	 * Internal Constructor
 	 */
 	private StashCommit () { }
@@ -102,6 +107,15 @@ public class StashCommit implements ICommit {
 	@JsonProperty ("linkedIssues")
 	public List<JiraIssue> getLinkedIssues () {
 		return this.linkedIssues;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@JsonProperty ("parent")
+	public List<String> getParentCommits () {
+		return this.parent;
 	}
 
 	/**
@@ -139,6 +153,16 @@ public class StashCommit implements ICommit {
 	}
 
 	/**
+	 * Processes a list of parent commits.
+	 * @param commits The commit list.
+	 */
+	@JsonProperty (value = "parents", required = true)
+	private void processParents (@NonNull List<StashCommitParentCommit> commits) {
+		this.parent = new ArrayList<> ();
+		for (StashCommitParentCommit commit : commits) this.parent.add (commit.getIdentifier ());
+	}
+
+	/**
 	 * Represents the commit attributes within the original JSON response.
 	 */
 	@JsonIgnoreProperties (ignoreUnknown = true)
@@ -158,5 +182,19 @@ public class StashCommit implements ICommit {
 		private void processKeys (@NonNull List<String> keys) {
 			this.jiraKeys = keys;
 		}
+	}
+
+	/**
+	 * Represents the parent commit.
+	 */
+	@JsonIgnoreProperties (ignoreUnknown = true)
+	public static class StashCommitParentCommit {
+
+		/**
+		 * Stores the parent identifier.
+		 */
+		@Getter
+		@JsonProperty (value = "id", required = true)
+		private String identifier;
 	}
 }
