@@ -65,17 +65,17 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			// skip iteration if already processed
 			if (commits.indexOf (key) > -1) continue;
 
-			// add to commit list
-			commits.push (key);
-
-			// add commit
-			commitsOut.push (cache.get ('commits')[key]);
-
 			// get children
 			var children = cache.get ('parents')[key];
 
 			// check for current version
 			if (!children && key == startHash) return -1;
+
+			// add to commit list
+			commits.push (key);
+
+			// add commit
+			commitsOut.push (cache.get ('commits')[key]);
 
 			// skip if no children are defined
 			if (!children) continue;
