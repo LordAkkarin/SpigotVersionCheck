@@ -28,10 +28,9 @@
 		<link rel="stylesheet" type="text/css" media="all" th:href="@{/assets/style/application.css}" />
 
 		<!-- Scripts -->
-		<script type="text/javascript" th:src="@{/assets/script/library/require.js}" th:attr="data-main=@{/assets/script/application}"></script>
 		<script type="text/javascript" th:inline="javascript">
 		//<![CDATA[
-			require.config ({
+			var require = {
 				baseUrl:		/*[[@{/assets/script/}]]*/ '',
 				map:			{
 					'*':			{
@@ -53,13 +52,13 @@
 					text:			'library/text',
 					underscore:		'library/underscore'
 				}
-			});
-
-			define ('translation', [ ], function () {
-				return { };
-			});
+			};
 		//]]>
 		</script>
+		<script type="text/javascript" th:src="@{/assets/script/library/require.js}" data-main="application"></script>
+		<script type="text/javascript">//<![CDATA[
+			define ('translation', [ ], function () { return { }; });
+		//]]></script>
 	</head>
 	<body>
 		<header id="header-container" layout:fragment="headerContainer">
