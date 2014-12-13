@@ -30,7 +30,6 @@ import java.util.Map;
  * Provides a representation for Stash commit API responses.
  * @author Johannes Donath <johannesd@torchmind.com>
  * @copyright Copyright (C) 2014 Torchmind <http://www.torchmind.com>
- * @todo This system currently relies on Stash's commit ordering. However this does not always work out!
  */
 @JsonIgnoreProperties (ignoreUnknown = true)
 public class StashCommitResponse {
