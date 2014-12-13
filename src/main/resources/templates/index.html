@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright 2014 Johannes Donath <johannesd@torchmind.com>
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ 	http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+	<head>
+		<script type="text/javascript" th:inline="javascript">
+		//<![CDATA[
+			require (['translation'], function (translations) {
+				translations['index.result.latest.headline'] = /*[[#{index.result.latest.headline}]]*/ '';
+				translations['index.result.latest.description'] = /*[[#{index.result.latest.description}]]*/ '';
+			});
+		//]]>
+		</script>
+	</head>
+	<body>
+		<section id="main" class="container" layout:fragment="main">
+			<div class="text-center row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<h2 th:text="#{index.version.title}"></h2>
+
+					<form id="form-version-check">
+						<div class="form-group">
+							<input class="form-control text-center" id="version-check" type="text" th:placeholder="#{index.version.placeholder}" />
+							<span class="help-block" th:utext="#{index.version.help}"></span>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<hr />
+			</div>
+
+			<div id="version-check-result"></div>
+		</section>
+	</body>
+</html>
