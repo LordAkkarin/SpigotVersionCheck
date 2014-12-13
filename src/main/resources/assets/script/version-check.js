@@ -74,6 +74,9 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			// get children
 			var children = cache.get ('parents')[key];
 
+			// check for current version
+			if (!children && key == startHash) return -1;
+
 			// skip if no children are defined
 			if (!children) continue;
 
@@ -94,7 +97,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		commitsOut.splice (MAX_COMMITS, (commitsOut.length - MAX_COMMITS));
 
 		// return length
-		return (commits.length - 1);
+		return commits.length;
 	}
 
 	/**
