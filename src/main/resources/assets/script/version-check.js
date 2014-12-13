@@ -55,6 +55,36 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		// verify start hash
 		if (!cache.get ('commits')[startHash]) return -2;
 
+		// collect known parents of start
+		var knownParents = [ startHash ];
+
+		(function () {
+			var searchQueue = [ startHash ];
+
+			do {
+				var key = searchQueue[0];
+
+				// get commit
+				var commit = cache.get ('commits')[key];
+
+				// remove from search queue
+				searchQueue.splice (0, 1);
+
+				// skip if commit is unknown to the system (too old)
+				if (!commit) return true;
+
+				// get parents
+				var parents = commit['parent'];
+
+				// add to list of known parents
+				$(parents).each (function (index, element) {
+					if (knownParents.indexOf (element) > -1) return true;
+					knownParents.push (element.substr (0, 7));
+					searchQueue.push (element.substr (0, 7));
+				});
+			} while (searchQueue.length > 0);
+		}) ();
+
 		// search in parent map
 		do {
 			var key = searchQueue[0];
@@ -77,6 +107,20 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 
 				// add commit
 				commitsOut.push (cache.get ('commits')[key]);
+
+				// check parents
+				var parents = cache.get ('commits')[key]['parent'];
+
+				$ (parents).each (function (index, element) {
+					// fix length
+					element = element.substr (0, 7);
+
+					// check whether commit is already queued
+					if (searchQueue.indexOf (element) > -1 || commits.indexOf (element) > -1 || element == startHash || knownParents.indexOf (element) > -1) return true;
+
+					// add to queue
+					searchQueue.push (element);
+				});
 			}
 
 			// skip if no children are defined
