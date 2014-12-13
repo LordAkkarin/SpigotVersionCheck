@@ -26,6 +26,17 @@ a {
 	}
 }
 
+.btn-primary {
+	background-color:		@brand-color;
+	border-color:			@brand-color;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color:		lighten(@brand-color, 5%);
+	}
+}
+
 .navbar-inverse {
 	background-color:		@brand-color;
 
