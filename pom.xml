@@ -194,7 +194,7 @@
 			<!-- Templates -->
 			<resource>
 				<directory>${project.basedir}/src/main/resources/templates</directory>
-				<targetPath>/template/</targetPath>
+				<targetPath>./template/</targetPath>
 				<filtering>false</filtering>
 
 				<includes>
@@ -205,7 +205,7 @@
 			<!-- Localization -->
 			<resource>
 				<directory>${project.basedir}/src/main/resources/localization</directory>
-				<targetPath>/localization/</targetPath>
+				<targetPath>./localization/</targetPath>
 				<filtering>false</filtering>
 
 				<includes>
@@ -216,7 +216,7 @@
 			<!-- Static Resources -->
 			<resource>
 				<directory>${project.basedir}/src/main/resources/assets</directory>
-				<targetPath>/assets/</targetPath>
+				<targetPath>./assets/</targetPath>
 				<filtering>false</filtering>
 
 				<includes>
