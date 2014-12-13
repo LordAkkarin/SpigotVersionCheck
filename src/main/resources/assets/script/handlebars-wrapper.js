@@ -15,7 +15,30 @@
 define (['handlebars', 'translation'], function (Handlebars, translation) {
 	"use strict";
 
-	// register handler
+	console.log ('Handlebars!');
+
+	// register condition handler
+	Handlebars.registerHelper('condition', function (v1, operator, v2, options) {
+		var value = false;
+
+		// apply operator
+		switch (operator) {
+			case '==':	value = (v1 == v2); break;
+			case '===':	value = (v1 === v2); break;
+			case '!=':	value = (v1 != v2); break;
+			case '<':	value = (v1 < v2); break;
+			case '<=':	value = (v1 <= v2); break;
+			case '>':	value = (v1 > v2); break;
+			case '>=':	value = (v1 >= v2); break;
+			case '&&':	value = (v1 && v2); break;
+			case '||':	value = (v1 || v2); break;
+		}
+
+		// process result
+		return (value ? options.fn (this) : options.inverse (this));
+	});
+
+	// register translation handler
 	Handlebars.registerHelper ('translation', function (arg) {
 		return (translation[arg] != undefined ? translation[arg] : arg);
 	});
