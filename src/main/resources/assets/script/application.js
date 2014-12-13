@@ -19,15 +19,14 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 	Handlebars.registerPartial ('commit', TemplateCommit);
 
 	// Application Logic
-	require (['version-check', 'hndl!../template/result-none', 'hndl!../template/result-latest', 'hndl!../template/result-outdated', 'hndl!../template/result-unknown', 'hndl!../template/result-releaseday'], function (VersionCheck, TemplateNone, TemplateLatest, TemplateOutdated, TemplateUnknown, TemplateReleaseDay) {
+	require (['version-check', 'router', 'hndl!../template/result-none', 'hndl!../template/result-latest', 'hndl!../template/result-outdated', 'hndl!../template/result-unknown', 'hndl!../template/result-releaseday'], function (VersionCheck, Router, TemplateNone, TemplateLatest, TemplateOutdated, TemplateUnknown, TemplateReleaseDay) {
 		// initialize page
 		$('#version-check-result').html (TemplateNone ());
 
-		// hook submit
-		$('#form-version-check').submit (function (e) {
-			// prevent browser behavior
-			e.preventDefault ();
-
+		/**
+		 * Displays the information.
+		 */
+		function process () {
 			// remove error
 			$('#version-check').parent ().removeClass ('has-error');
 
@@ -54,12 +53,32 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 				} else if (!result.versions.craftbukkit && !result.versions.spigot)
 					$('#version-check-result').html (TemplateLatest ());
 				else
-					// display results
+				// display results
 					$('#version-check-result').html (TemplateOutdated (result));
 
 				// display result
 				$('#version-check-result').show ('fast');
 			});
+		}
+
+		// construct router
+		var router = new Router ();
+		router.on ('route:version', function (version) {
+			// skip empty version
+			if (!version) return;
+
+			// process
+			$('#version-check').val (version);
+			process ();
+		});
+
+		// hook submit
+		$('#form-version-check').submit (function (e) {
+			// prevent browser behavior
+			e.preventDefault ();
+
+			// display changes
+			process ();
 
 			// cancel
 			return false;

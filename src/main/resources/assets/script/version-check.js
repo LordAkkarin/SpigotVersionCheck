@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define (['jquery', 'model/cache-craftbukkit', 'model/cache-spigot'], function ($, CacheCraftBukkit, CacheSpigot) {
+define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'], function ($, Backbone, CacheCraftBukkit, CacheSpigot) {
 	"use strict";
 
 	// constants
@@ -20,12 +20,27 @@ define (['jquery', 'model/cache-craftbukkit', 'model/cache-spigot'], function ($
 	var OLD_VERSION_PATTERN = /(\s|^)git-Spigot-(\"([A-F0-9]{7})\"|([A-F0-9]{7}))(\s|$)/i;
 	var MAX_COMMITS = 20;
 
+	var cacheLoaded = 0;
+
+	/**
+	 * Enables the router.
+	 */
+	function enableRouter () {
+		console.log ('A cache finished loading ...');
+
+		// increase counter
+		cacheLoaded++;
+
+		// check
+		if (cacheLoaded >= 2) console.log ('History start: ' + Backbone.history.start ());
+	}
+
 	// fetch caches
 	var cacheCraftBukkit = new CacheCraftBukkit ();
 	var cacheSpigot = new CacheSpigot ();
 
-	cacheCraftBukkit.fetch ();
-	cacheSpigot.fetch ();
+	cacheCraftBukkit.fetch ({ success: enableRouter });
+	cacheSpigot.fetch ({ success: enableRouter });
 
 	/**
 	 * Walks the commit tree.
