@@ -29,7 +29,21 @@
 
 		<!-- Scripts -->
 		<script type="text/javascript" src="@{/assets/script/library/require.js}"></script>
-		<script type="text/javascript" src="@{/assets/script/require-conf.js}"></script>
+		<script type="text/javascript" th:inline="javascript">
+		//<![CDATA[
+			require.config ({
+				baseUrl:		/*[[@{/assets/script/}]]*/ '',
+				paths:			{
+					backbone:		'library/backbone',
+					handlebars:		'library/handlebars',
+					hndl:			'library/hndl',
+					jquery:			'library/jquery',
+					text:			'library/text',
+					underscore:		'library/underscore'
+				}
+			});
+		//]]>
+		</script>
 	</head>
 	<body>
 		<header id="header-container" layout:fragment="headerContainer">
