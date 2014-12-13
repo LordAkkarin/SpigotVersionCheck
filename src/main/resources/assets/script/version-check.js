@@ -26,8 +26,6 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 	 * Enables the router.
 	 */
 	function enableRouter () {
-		console.log ('A cache finished loading ...');
-
 		// increase counter
 		cacheLoaded++;
 
@@ -198,8 +196,6 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		// update booleans
 		result.versions.craftbukkit = (result.versions.craftbukkitCount > 0);
 		result.versions.spigot = (result.versions.spigotCount > 0);
-
-		console.log (result);
 
 		// return result
 		return result;
