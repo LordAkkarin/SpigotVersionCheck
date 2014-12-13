@@ -59,6 +59,12 @@
 		<script type="text/javascript" th:src="@{/assets/script/library/require.js}" data-main="application"></script>
 		<script type="text/javascript" th:inline="javascript">
 		//<![CDATA[
+			define ('configuration', [ ], function () {
+				return {
+					path:			/*[[@{/}]]*/ ''
+				};
+			});
+
 			define ('translation', [ ], function () {
 				return {
 					"commit.by": /*[[#{commit.by}]]*/ ''
