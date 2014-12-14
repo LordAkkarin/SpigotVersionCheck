@@ -20,6 +20,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 	var OLD_VERSION_PATTERN = /(\s|^)git-Spigot-(\"([A-F0-9]{7})\"|([A-F0-9]{7}))(\s|$)/i;
 	var MAX_COMMITS = 20;
 
+	// helper variable for delayed router start
 	var cacheLoaded = 0;
 
 	/**
@@ -33,7 +34,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		if (cacheLoaded >= 2) console.log ('History start: ' + Backbone.history.start ());
 	}
 
-	// fetch caches
+	// fetch caches from backend (see Java part)
 	var cacheCraftBukkit = new CacheCraftBukkit ();
 	var cacheSpigot = new CacheSpigot ();
 
@@ -50,7 +51,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		var commits = [];
 		var searchQueue = [ startHash ];
 
-		// verify start hash
+		// verify start hash against known commits
 		if (!cache.get ('commits')[startHash]) return -2;
 
 		// collect known parents of start
@@ -71,7 +72,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 				// skip if commit is unknown to the system (too old)
 				if (!commit) return true;
 
-				// get parents
+				// get parents for current element
 				var parents = commit['parent'];
 
 				// add to list of known parents
@@ -87,13 +88,13 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		do {
 			var key = searchQueue[0];
 
-			// remove
+			// remove element from queue
 			searchQueue.splice (0, 1);
 
 			// skip iteration if already processed
 			if (commits.indexOf (key) > -1) continue;
 
-			// get children
+			// get children for current element
 			var children = cache.get ('parents')[key];
 
 			// check for current version
@@ -103,14 +104,14 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			if (key != startHash) {
 				commits.push (key);
 
-				// add commit
+				// add commit to output list
 				commitsOut.push (cache.get ('commits')[key]);
 
-				// check parents
+				// check parents (support for merging)
 				var parents = cache.get ('commits')[key]['parent'];
 
 				$ (parents).each (function (index, element) {
-					// fix length
+					// fix length (bring down to Spigot format)
 					element = element.substr (0, 7);
 
 					// check whether commit is already queued
@@ -121,10 +122,8 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 				});
 			}
 
-			// skip if no children are defined
-			if (!children) continue;
-
 			// append children to queue
+			if (!children) continue;
 			$(children).each (function (index, element) {
 				// check whether commit is already queued
 				if (searchQueue.indexOf (element) > -1 || commits.indexOf (element) > 0) return true;
@@ -134,13 +133,13 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			});
 		} while (searchQueue.length > 0);
 
-		// reverse array
+		// reverse commits (we're running down the tree backwards)
 		commitsOut.reverse ();
 
-		// remove elements
+		// remove exhaust (limit to X commits on display)
 		commitsOut.splice (MAX_COMMITS, (commitsOut.length - MAX_COMMITS));
 
-		// return length
+		// return absolute length (!= commits displayed)
 		return commits.length;
 	}
 
@@ -148,20 +147,20 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 	 * Checks a version.
 	 */
 	return function (versionString) {
-		// check value
+		// check for empty values
 		if (!versionString) return {
 			error:		'invalid'
 		};
 
-		// check for regular version
+		// check for regular version (current pattern)
 		var matches = versionString.match (VERSION_PATTERN);
 
-		// check for old version
+		// check for old version (major Buildtools fuckup)
 		if (versionString.match (OLD_VERSION_PATTERN) && !matches) return {
 			error:		'old'
 		};
 
-		// check for errors
+		// check whether current pattern matches
 		if (!matches) return {
 			error:		'invalid'
 		};
@@ -170,7 +169,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 		var spigotHash = matches[2].toLowerCase ();
 		var craftbukkitHash = matches[3].toLowerCase ();
 
-		// initialize return value
+		// initialize return value with defaults
 		var result = {
 			versions: {
 				craftbukkit:		false,
@@ -184,7 +183,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			}
 		};
 
-		// walk commit trees
+		// walk down commit trees to receive commit counts and commits
 		result.versions.craftbukkitCount = walkTree (craftbukkitHash, cacheCraftBukkit, result.commits.craftbukkit);
 		result.versions.spigotCount = walkTree (spigotHash, cacheSpigot, result.commits.spigot);
 
@@ -193,7 +192,7 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 			error:				"unknown"
 		};
 
-		// update booleans
+		// update helper variables (thanks Handlebars)
 		result.versions.craftbukkit = (result.versions.craftbukkitCount > 0);
 		result.versions.spigot = (result.versions.spigotCount > 0);
 
