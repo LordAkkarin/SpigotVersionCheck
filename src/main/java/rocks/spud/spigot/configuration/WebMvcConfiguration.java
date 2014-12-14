@@ -36,10 +36,6 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
-
-	/**
-	 * Stores an internal logger instance.
-	 */
 	@Getter (AccessLevel.PROTECTED)
 	private static final Logger logger = LogManager.getLogger (WebMvcConfiguration.class);
 
@@ -63,20 +59,17 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	 */
 	@Bean
 	public ITemplateResolver defaultTemplateResolver () {
-		// create new resolver
 		TemplateResolver resolver = new TemplateResolver ();
 
-		// set prefix & suffix
+		// set filename template & other properties
 		resolver.setPrefix ("classpath:/template/");
 		resolver.setSuffix (".html");
-
-		// set additional properties
 		resolver.setTemplateMode ("HTML5");
 		resolver.setCharacterEncoding ("UTF-8");
 		resolver.setCacheable (!this.disableCache);
 		resolver.setResourceResolver (this.resourceResolver ());
 
-		// log cache state
+		// notify user about cache state
 		if (this.disableCache) {
 			getLogger ().warn ("==================================");
 			getLogger ().warn ("   TEMPLATE CACHING IS DISABLED   ");
@@ -87,12 +80,11 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 			getLogger ().warn ("==================================");
 		}
 
-		// return prepared resolver
 		return resolver;
 	}
 
 	/**
-	 * Provides a resource resolver.
+	 * Provides a standard resource resolver for Thymeleaf.
 	 * @return The resource resolver.
 	 */
 	@Bean

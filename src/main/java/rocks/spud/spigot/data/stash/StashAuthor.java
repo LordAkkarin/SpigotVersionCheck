@@ -34,17 +34,17 @@ import rocks.spud.spigot.data.IAuthor;
 public class StashAuthor implements IAuthor {
 
 	/**
-	 * Stores the avatar identifier.
+	 * Stores the avatar identifier (e.g. Gravatar hash).
 	 */
 	private String avatarIdentifier;
 
 	/**
-	 * Stores the author name.
+	 * Stores the author name (Jira/Stash Username).
 	 */
 	private String name;
 
 	/**
-	 * Internal Constructor
+	 * Jackson Utility Method
 	 */
 	private StashAuthor () { }
 
@@ -67,7 +67,7 @@ public class StashAuthor implements IAuthor {
 	}
 
 	/**
-	 * Processes an email address.
+	 * Jackson Utility Method
 	 * @param emailAddress The email address.
 	 */
 	@JsonProperty (value = "emailAddress", required = true)
@@ -83,7 +83,7 @@ public class StashAuthor implements IAuthor {
 	}
 
 	/**
-	 * Processes a name.
+	 * Jackson Utility Method
 	 * @param name The name.
 	 */
 	@JsonProperty (value = "name", required = true)

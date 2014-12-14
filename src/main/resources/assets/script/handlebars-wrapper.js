@@ -15,11 +15,13 @@
 define (['handlebars', 'translation'], function (Handlebars, translation) {
 	"use strict";
 
-	// register condition handler
+	/**
+	 * Provides a simple condition helper.
+	 * Usage: {#condition variable1 "operator" variable2}
+	 */
 	Handlebars.registerHelper('condition', function (v1, operator, v2, options) {
 		var value = false;
 
-		// apply operator
 		switch (operator) {
 			case '==':	value = (v1 == v2); break;
 			case '===':	value = (v1 === v2); break;
@@ -32,11 +34,14 @@ define (['handlebars', 'translation'], function (Handlebars, translation) {
 			case '||':	value = (v1 || v2); break;
 		}
 
-		// process result
+		// compile contents (fn => display, inverse => removal)
 		return (value ? options.fn (this) : options.inverse (this));
 	});
 
-	// register translation handler
+	/**
+	 * Provides a simple translation helper.
+	 * Usage: {{translation "this.is.a.stupid.translation.name"}}
+	 */
 	Handlebars.registerHelper ('translation', function (arg) {
 		return (translation[arg] != undefined ? translation[arg] : arg);
 	});

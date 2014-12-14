@@ -28,13 +28,13 @@ import rocks.spud.spigot.component.ApplicationDetail;
 public class ApplicationAPI {
 
 	/**
-	 * Stores the application detail.
+	 * See {@link rocks.spud.spigot.component.ApplicationDetail}
 	 */
 	@Autowired
 	private ApplicationDetail applicationDetail;
 
 	/**
-	 * Provides an endpoint for application information.
+	 * Provides an endpoint to retrieve application information.
 	 * @return The information object.
 	 */
 	@RequestMapping (value = "/")

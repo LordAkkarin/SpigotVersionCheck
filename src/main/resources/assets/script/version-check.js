@@ -27,10 +27,9 @@ define (['jquery', 'backbone', 'model/cache-craftbukkit', 'model/cache-spigot'],
 	 * Enables the router.
 	 */
 	function enableRouter () {
-		// increase counter
 		cacheLoaded++;
 
-		// check
+		// check counter (we are loading 2 caches)
 		if (cacheLoaded >= 2) console.log ('History start: ' + Backbone.history.start ());
 	}
 

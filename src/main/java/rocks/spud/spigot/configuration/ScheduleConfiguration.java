@@ -34,10 +34,6 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableScheduling
 public class ScheduleConfiguration {
-
-	/**
-	 * Stores an internal logger instance.
-	 */
 	@Getter (AccessLevel.PROTECTED)
 	private static final Logger logger = LogManager.getLogger (ScheduleConfiguration.class);
 
@@ -66,20 +62,15 @@ public class ScheduleConfiguration {
 	 */
 	@Scheduled (cron = "0 */15 * * * *")
 	private void poll () {
-		// log
 		getLogger ().info ("Starting version cache update ...");
 
-		// poll
+		// poll new cache data from upstream
 		this.craftBukkitVersionCache.poll ();
-
-		// log
 		getLogger ().info ("Found " + this.craftBukkitVersionCache.getCommits ().size () + " commits for CraftBukkit.");
 
-		// poll
 		this.spigotVersionCache.poll ();
-
-		// log
 		getLogger ().info ("Found " + this.spigotVersionCache.getCommits ().size () + " commits for Spigot.");
+
 		getLogger ().info ("Version cache update finished.");
 	}
 }

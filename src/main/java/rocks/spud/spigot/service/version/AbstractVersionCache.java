@@ -29,15 +29,11 @@ import java.util.Map;
  * @copyright Copyright (C) 2014 Torchmind <http://www.torchmind.com>
  */
 public abstract class AbstractVersionCache implements IVersionCache {
-
-	/**
-	 * Stores an internal logger instance.
-	 */
 	@Getter (AccessLevel.PROTECTED)
 	private static final Logger logger = LogManager.getLogger (AbstractVersionCache.class);
 
 	/**
-	 * Stores the response cache.
+	 * Stores the response cache (a cached version of the API response).
 	 */
 	private Map<String, Object> responseCache = null;
 

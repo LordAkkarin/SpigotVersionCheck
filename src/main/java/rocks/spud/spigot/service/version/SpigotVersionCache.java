@@ -36,12 +36,12 @@ public class SpigotVersionCache extends AbstractVersionCache {
 	public static final String RELEASE_COMMIT = "2e45f5d2fa44333b19ba591d20a7cec2d85b40cc";
 
 	/**
-	 * Stores the commit list.
+	 * See {@link rocks.spud.spigot.service.IVersionCache#getCommits()}
 	 */
 	private Map<String, ? extends ICommit> commits = new HashMap<> ();
 
 	/**
-	 * Stores the parent map.
+	 * See {@link rocks.spud.spigot.service.IVersionCache#getParents()}
 	 */
 	private Map<String, List<String>> parents = new HashMap<> ();
 
@@ -66,18 +66,18 @@ public class SpigotVersionCache extends AbstractVersionCache {
 	}
 
 	/**
-	 * Polls an update.
+	 * Requests an update from the upstream server.
 	 */
 	public void poll () {
 		StashCommitResponse response = StashCommitResponse.getStashCommitResponse ("SPIGOT", "spigot", RELEASE_COMMIT);
 
-		// synchronize & store values
+		// synchronize with other threads to ensure no data is corrupted when updating the values
 		synchronized (this) {
 			this.commits = response.getCommitMap ();
 			this.parents = response.getParentMap ();
 		}
 
-		// delete cache
+		// delete cache (serve new data on page reload)
 		this.deleteResponseCache ();
 	}
 }

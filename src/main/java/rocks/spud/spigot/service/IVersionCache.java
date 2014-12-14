@@ -27,19 +27,19 @@ import java.util.Map;
 public interface IVersionCache {
 
 	/**
-	 * Returns a map of commits.
+	 * Returns the mapped commit list (short identifiers mapped to commit data).
 	 * @return The commit map.
 	 */
 	public Map<String, ? extends ICommit> getCommits ();
 
 	/**
-	 * Returns the parent map.
+	 * Returns the parent map (short identifiers mapped to commit children).
 	 * @return The parent map.
 	 */
 	public Map<String, List<String>> getParents ();
 
 	/**
-	 * Returns the response cache.
+	 * Returns the response cache (a cached version of the API response).
 	 * @return The cache.
 	 */
 	public Map<String, Object> getResponseCache ();

@@ -32,19 +32,19 @@ import rocks.spud.spigot.data.IIssue;
 public class JiraIssue implements IIssue {
 
 	/**
-	 * Stores the issue key.
+	 * Stores the JIRA issue key (e.g. SPIGOT-42)
 	 */
 	@Getter
 	@JsonProperty (value = "key", required = true)
 	private String key;
 
 	/**
-	 * Stores the issue summary.
+	 * Stores the issue summary (e.g. title)
 	 */
 	private String summary;
 
 	/**
-	 * Internal Constructor
+	 * Jackson Utility Method
 	 */
 	private JiraIssue () { }
 
@@ -58,7 +58,7 @@ public class JiraIssue implements IIssue {
 	}
 
 	/**
-	 * Processes the field object.
+	 * Jackson Utility Method
 	 * @param fields The field object.
 	 */
 	@JsonProperty (value = "fields", required = true)
@@ -84,10 +84,6 @@ public class JiraIssue implements IIssue {
 	 */
 	@JsonIgnoreProperties (ignoreUnknown = true)
 	private static class Fields {
-
-		/**
-		 * Stores the summary.
-		 */
 		@Getter
 		@JsonProperty (value = "summary", required = true)
 		private String summary;

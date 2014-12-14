@@ -20,11 +20,12 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 
 	// Application Logic
 	require (['version-check', 'router', 'hndl!../template/result-none', 'hndl!../template/result-latest', 'hndl!../template/result-outdated', 'hndl!../template/result-unknown', 'hndl!../template/result-releaseday'], function (VersionCheck, Router, TemplateNone, TemplateLatest, TemplateOutdated, TemplateUnknown, TemplateReleaseDay) {
-		// initialize page
+		// initialize page (ensures users are warned when no JavaScript is available)
+		// also simplifies translation slightly
 		$('#version-check-result').html (TemplateNone ());
 
 		/**
-		 * Displays the information.
+		 * Renders the version information on the page.
 		 */
 		function process () {
 			// remove error
@@ -32,10 +33,9 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 
 			// hide previous elements
 			$('#version-check-result').hide ('fast', function () {
-				// validate version
+				// check version against backend
 				var result = VersionCheck ($('#version-check').val ());
 
-				// check for errors
 				if (!!result.error) {
 					switch (result.error) {
 						default:
@@ -53,31 +53,29 @@ define (['jquery', 'handlebars', 'hndl!../template/commit'], function ($, Handle
 				} else if (!result.versions.craftbukkit && !result.versions.spigot)
 					$('#version-check-result').html (TemplateLatest ());
 				else
-				// display results
 					$('#version-check-result').html (TemplateOutdated (result));
 
-				// display result
+				// re-enable root element
 				$('#version-check-result').show ('fast');
 			});
 		}
 
-		// construct router
+		// register application router (enabled when the caches are fully loaded)
 		var router = new Router ();
 		router.on ('route:version', function (version) {
 			// skip empty version
 			if (!version) return;
 
-			// process
+			// force version check
 			$('#version-check').val (version);
 			process ();
 		});
 
-		// hook submit
+		// hook form submit
 		$('#form-version-check').submit (function (e) {
-			// prevent browser behavior
 			e.preventDefault ();
 
-			// display changes
+			// enforce navigation change & render out results
 			router.navigate ($('#version-check').val ());
 			process ();
 

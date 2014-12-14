@@ -28,7 +28,7 @@ public interface IAuthor {
 	public String getAvatarIdentifier ();
 
 	/**
-	 * Returns the author name.
+	 * Returns the author name (JIRA/Stash username).
 	 * @return The name.
 	 */
 	public String getName ();

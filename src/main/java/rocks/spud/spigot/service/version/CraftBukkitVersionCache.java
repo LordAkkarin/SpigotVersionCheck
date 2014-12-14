@@ -31,17 +31,18 @@ import java.util.Map;
 public class CraftBukkitVersionCache extends AbstractVersionCache {
 
 	/**
-	 * Defines the CraftBukkit release commit to look for.
+	 * Defines the initial CraftBukkit release commit to look for.
+	 * Note: The application will not load any commits beyond that point.
 	 */
 	public static final String RELEASE_COMMIT = "24557bc2b37deb6a0edf497d547471832457b1dd";
 
 	/**
-	 * Stores the commit list.
+	 * See {@link rocks.spud.spigot.service.IVersionCache#getCommits()}
 	 */
 	private Map<String, ? extends ICommit> commits = new HashMap<> ();
 
 	/**
-	 * Stores the parent map.
+	 * See {@link rocks.spud.spigot.service.IVersionCache#getParents()}
 	 */
 	private Map<String, List<String>> parents = new HashMap<> ();
 
@@ -66,18 +67,18 @@ public class CraftBukkitVersionCache extends AbstractVersionCache {
 	}
 
 	/**
-	 * Polls an update.
+	 * Requests an update from the upstream server.
 	 */
 	public synchronized void poll () {
 		StashCommitResponse response = StashCommitResponse.getStashCommitResponse ("SPIGOT", "craftbukkit", RELEASE_COMMIT);
 
-		// synchronize & store values
+		// synchronize with other threads to ensure no data is corrupted when updating the values
 		synchronized (this) {
 			this.commits = response.getCommitMap ();
 			this.parents = response.getParentMap ();
 		}
 
-		// delete cache
+		// delete cache (serve new contents on page reload)
 		this.deleteResponseCache ();
 	}
 }

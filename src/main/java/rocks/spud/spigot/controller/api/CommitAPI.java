@@ -30,16 +30,9 @@ import java.util.Map;
 @RestController
 @RequestMapping ({ "/rest/api/2.0/commits", "/rest/api/latest/commits" })
 public class CommitAPI {
-
-	/**
-	 * Stores the CraftBukkit version cache.
-	 */
 	@Autowired
 	private CraftBukkitVersionCache craftBukkitVersionCache;
 
-	/**
-	 * Stores the Spigot version cache.
-	 */
 	@Autowired
 	private SpigotVersionCache spigotVersionCache;
 

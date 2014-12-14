@@ -32,10 +32,6 @@ import java.util.jar.Manifest;
  */
 @Component
 public class ApplicationDetail {
-
-	/**
-	 * Stores an internal logger instance.
-	 */
 	@Getter (AccessLevel.PROTECTED)
 	private static final Logger logger = LogManager.getLogger (ApplicationDetail.class);
 
@@ -61,20 +57,20 @@ public class ApplicationDetail {
 	 * Constructs a new ApplicationDetail instance.
 	 */
 	public ApplicationDetail () {
-		// get properties
+		// get default properties
 		Properties properties = new Properties ();
 		properties.setProperty ("application.title", "Development Server");
 		properties.setProperty ("application.version", "(Development Snapshot)");
 		properties.setProperty ("application.vendor", "Unknown Vendor");
 
-		// load
+		// load from classpath
 		try {
 			properties.load (ApplicationDetail.class.getResourceAsStream ("/metadata.properties"));
 		} catch (IOException ex) {
 			getLogger ().warn ("Could not load application metadata: " + ex.getMessage ());
 		}
 
-		// store version
+		// write to final fields
 		this.title = properties.getProperty ("application.title");
 		this.version = properties.getProperty ("application.version");
 		this.vendor = properties.getProperty ("application.vendor");

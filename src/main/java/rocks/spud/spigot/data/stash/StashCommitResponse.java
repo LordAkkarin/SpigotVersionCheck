@@ -35,24 +35,24 @@ import java.util.Map;
 public class StashCommitResponse {
 
 	/**
-	 * Defines the default commit limit.
+	 * Defines the default commit limit (e.g. the maximum amount the application will fetch).
 	 */
 	public static final int DEFAULT_LIMIT = 8192;
 
 	/**
-	 * Stores the commit map.
+	 * Stores the commit map (a mapping between short commit IDs and their data).
 	 */
 	@Getter
 	private Map<String, StashCommit> commitMap;
 
 	/**
-	 * Stores the parent map.
+	 * Stores the parent map (a mapping between commits and their children).
 	 */
 	@Getter
 	private Map<String, List<String>> parentMap;
 
 	/**
-	 * Internal Constructor
+	 * Jackson Utility Method
 	 */
 	private StashCommitResponse () { }
 
@@ -84,7 +84,7 @@ public class StashCommitResponse {
 	}
 
 	/**
-	 * Processes the value list.
+	 * Jackson Utility Method
 	 * @param commitList The commit list.
 	 */
 	@JsonProperty (value = "values", required = true)
@@ -92,7 +92,7 @@ public class StashCommitResponse {
 		this.commitMap = new HashMap<> ();
 		this.parentMap = new HashMap<> ();
 
-		// collect list of commits
+		// convert list into correct format
 		for (StashCommit commit : commitList) {
 			this.commitMap.put (commit.getIdentifier ().substring (0, 7).toLowerCase (), commit);
 		}

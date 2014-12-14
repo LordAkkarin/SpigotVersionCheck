@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class FaviconController {
 
 	/**
-	 * Serves the favicon.
-	 * @return The favicon template.
+	 * Serves the favicon (works around Spring Boot's default mappings).
+	 * @return The favicon path.
 	 */
 	@RequestMapping (value = "favicon.ico", method = RequestMethod.GET)
 	public String favicon () {

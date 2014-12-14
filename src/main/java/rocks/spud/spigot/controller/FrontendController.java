@@ -28,15 +28,11 @@ import rocks.spud.spigot.component.ApplicationDetail;
  */
 @Controller
 public class FrontendController {
-
-	/**
-	 * Stores the application detail.
-	 */
 	@Autowired
 	private ApplicationDetail applicationDetail;
 
 	/**
-	 * Serves the index page.
+	 * Serves the (mostly static) index page.
 	 * @return The template.
 	 */
 	@RequestMapping (value = "/", method = RequestMethod.GET)

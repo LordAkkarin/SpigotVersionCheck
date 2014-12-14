@@ -36,49 +36,45 @@ import java.util.List;
 @AllArgsConstructor
 @JsonIgnoreProperties (ignoreUnknown = true)
 public class StashCommit implements ICommit {
-
-	/**
-	 * Stores an internal logger instance.
-	 */
 	@Getter (AccessLevel.PROTECTED)
 	private static final Logger logger = LogManager.getLogger (StashCommit.class);
 
 	/**
-	 * Stores the author.
+	 * Stores the author (e.g. the Git name).
 	 */
 	@JsonProperty (value = "author", required = true)
 	@Getter
 	private StashAuthor author;
 
 	/**
-	 * Stores the display identifier.
+	 * Stores the display identifier (e.g. the shortened git hash).
 	 */
 	private String displayIdentifier;
 
 	/**
-	 * Stores the identifier.
+	 * Stores the identifier (e.g. the full git hash).
 	 */
 	private String identifier;
 
 	/**
-	 * Stores the issue list.
+	 * Stores a list of linked JIRA issues.
 	 */
 	private List<JiraIssue> linkedIssues = new ArrayList<> ();
 
 	/**
-	 * Stores the message.
+	 * Stores the git commit message.
 	 */
 	@JsonProperty (value = "message", required = true)
 	@Getter
 	private String message;
 
 	/**
-	 * Stores a list of parent commits.
+	 * Stores a list of known direct parents.
 	 */
 	private List<String> parent;
 
 	/**
-	 * Internal Constructor
+	 * Jackson Utility Method
 	 */
 	private StashCommit () { }
 
@@ -119,7 +115,7 @@ public class StashCommit implements ICommit {
 	}
 
 	/**
-	 * Processes the commit attributes.
+	 * Jackson Utility Method
 	 * @param attributes The attributes.
 	 */
 	@JsonProperty ("attributes")
@@ -135,7 +131,7 @@ public class StashCommit implements ICommit {
 	}
 
 	/**
-	 * Processes the display identifier.
+	 * Jackson Utility Method
 	 * @param displayIdentifier The identifier.
 	 */
 	@JsonProperty (value = "displayId", required = true)
@@ -144,7 +140,7 @@ public class StashCommit implements ICommit {
 	}
 
 	/**
-	 * Processes the identifier.
+	 * Jackson Utility Method
 	 * @param identifier The identifier.
 	 */
 	@JsonProperty (value = "id", required = true)
@@ -153,7 +149,7 @@ public class StashCommit implements ICommit {
 	}
 
 	/**
-	 * Processes a list of parent commits.
+	 * Jackson Utility Method
 	 * @param commits The commit list.
 	 */
 	@JsonProperty (value = "parents", required = true)
@@ -175,7 +171,7 @@ public class StashCommit implements ICommit {
 		private List<String> jiraKeys = new ArrayList<> ();
 
 		/**
-		 * Processes the JIRA issue keys.
+		 * Jackson Utility Method
 		 * @param keys The key list.
 		 */
 		@JsonProperty (value = "jira-key", required = false)
@@ -189,10 +185,6 @@ public class StashCommit implements ICommit {
 	 */
 	@JsonIgnoreProperties (ignoreUnknown = true)
 	public static class StashCommitParentCommit {
-
-		/**
-		 * Stores the parent identifier.
-		 */
 		@Getter
 		@JsonProperty (value = "id", required = true)
 		private String identifier;
